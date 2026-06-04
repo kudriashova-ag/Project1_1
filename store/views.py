@@ -1,7 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
 from .data import PRODUCTS, ORDERS, VALID_CATEGORIES, CATEGORY_NAMES
-from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 
 # Доможні функції
@@ -38,14 +37,11 @@ def apply_filters(products_dict, sort=None, in_stock=False):
 def home(request):
     """ Завдання 2 — Головна сторінка """
     totalProducts = len(PRODUCTS)
-
-    return HttpResponse(f"""
-                        <h1>My Store</h1>
-                        <p>Товарів: {totalProducts}</p>
-                        <a href="/store/">Каталог</a>
-                        <a href="/store/search">Пошук</a>
-                        <a href="/store/orders">Замовлення</a>
-                        """)
+    context = {
+        'totalProducts': totalProducts,
+        'heading': '<i>My Store</i>'
+        }
+    return render(request, "store/home.html", context)
 
 def product_list(request):
     """ Завдання 3 — Каталог товарів з фільтрацією """
@@ -54,14 +50,11 @@ def product_list(request):
 
     products = apply_filters(PRODUCTS, sort = sort, in_stock = in_stock)
 
-    return JsonResponse({
-        "filters":{
-            "sort": sort or None,
-            "in_stock": in_stock
-        },
-        "count": len(products),
-        "products": products
-    }, json_dumps_params = {"ensure_ascii": False, "indent": 2})
+    return render(request, "store/product_list.html", {
+        "products": products,
+        "sort": sort,
+        "in_stock": in_stock
+    })
 
 
 def product_detail(request, product_id):
@@ -136,3 +129,25 @@ def order_list(request):
     )
 
     
+def search(request):
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+    query = request.GET.get("q", "").strip()
+    products = []
+    
+    if query:
+        products = [
+            product_to_dict(pid, p)
+            for pid, p in PRODUCTS.items()
+            if query.lower() in p["name"].lower()
+        ]
+        
+    if is_ajax:
+        return JsonResponse(
+            {"products": products}, 
+            json_dumps_params={"ensure_ascii": False}
+            )
+    
+    return render(request, "store/search.html", {
+        "query": query,
+        "products": products
+    })

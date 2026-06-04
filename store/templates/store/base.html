@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyStore{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    {% block extra_css %}{% endblock  %}
+</head>
+<body>
+    <header>
+        Header
+
+        <form method="GET" class="search-bar" action="{% url "store:search" %}">
+            <input type="text" name="q" value="{{query}}" placeholder="Введіть назву товару...">
+            <button type="submit" class="btn btn-primary">Знайти</button>
+        </form>
+
+    </header>
+    
+     <main>
+        {% block content %}{% endblock %}
+     </main>   
+    <footer>Footer</footer>
+     <script src="{% static "js/script.js" %}"></script>
+    {% block extra_js %}{% endblock  %}
+</body>
+</html>
