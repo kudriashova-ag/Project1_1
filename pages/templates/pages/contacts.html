@@ -2,6 +2,13 @@
 
 {% block content %}
     <h1>Контакти</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message message-{{message.tags}}">{{message}}</p>
+        {% endfor %}
+    {% endif %}
+
     <form method="POST" action="{% url "contacts" %}" novalidate>
         {{ form.non_field_errors }}
         

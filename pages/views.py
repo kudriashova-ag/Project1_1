@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import ContactForm
+from django.contrib import messages
 
 # Create your views here.
 def contacts(request):
@@ -12,10 +13,15 @@ def contacts(request):
             agree = form.cleaned_data['agree']
             
             print(name, email, message, agree)
+            # flash message - видаляються після першого відображення
             
+            messages.success(request, "Повідомлення успішно надіслано!")
+            return redirect('contacts')  #  post-redirect-get pattern  PRG
+        
         else:
             
             return render(request, 'pages/contacts.html', {'form': form})
     
     form = ContactForm()
     return render(request, 'pages/contacts.html', {'form': form})
+
