@@ -100,7 +100,7 @@ def order_views(request, product_id):
                 json_dumps_params={"ensure_ascii": False, "indent": 2}
                 )
         # валідація
-
+        
         order = {
             "order_id": len(ORDERS) + 1,
             "product_id": product_id,

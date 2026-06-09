@@ -10,13 +10,16 @@
 </head>
 <body>
     <header>
-        Header
+        <div class="logo">My App</div>
 
         <form method="GET" class="search-bar" action="{% url "store:search" %}">
             <input type="text" name="q" value="{{query}}" placeholder="Введіть назву товару...">
             <button type="submit" class="btn btn-primary">Знайти</button>
         </form>
-
+        
+        <nav>
+            <a href="{% url "contacts" %}">Контакти</a>
+        </nav>
     </header>
     
      <main>
