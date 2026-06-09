@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
 from .data import PRODUCTS, ORDERS, VALID_CATEGORIES, CATEGORY_NAMES
 from django.views.decorators.csrf import csrf_exempt
+from .models import Product, Category
 
 # Доможні функції
 def product_to_dict(product_id, product):
@@ -35,13 +36,20 @@ def apply_filters(products_dict, sort=None, in_stock=False):
 
 # View функціі
 def home(request):
-    """ Завдання 2 — Головна сторінка """
-    totalProducts = len(PRODUCTS)
+    totalProducts = Product.objects.count()
+    available_products = Product.objects.filter(is_available=True, stock__gt=0).count()
+    latest_products = Product.objects.filter(is_available=True, stock__gt=0).order_by('-created_at')[:4]
+    
     context = {
         'totalProducts': totalProducts,
+        'available_products': available_products,
+        'latest_products': latest_products,
         'heading': '<i>My Store</i>'
         }
     return render(request, "store/home.html", context)
+
+
+
 
 def product_list(request):
     """ Завдання 3 — Каталог товарів з фільтрацією """

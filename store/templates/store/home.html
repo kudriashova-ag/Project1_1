@@ -13,10 +13,17 @@
 
 <div>
     {% if totalProducts > 0 %}
-    Товарів: {{totalProducts}}
+        <p>Товарів: {{totalProducts}}</p>
+        <p>В наявності: {{available_products}}</p>
     {% else %}
     Нажаль, склад порожній
     {% endif %}
+
+    {% for product in latest_products %}
+     <div> {{ product.name }} </div>
+    {% endfor %}
+
+
 </div>
 
 <a href="{% url 'store:product_list' %}">Каталог</a>
