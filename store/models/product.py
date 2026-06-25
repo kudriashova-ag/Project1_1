@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from .tag import Tag
 from .mixins import SlugMixin, TimeMixin
 
 
@@ -13,10 +15,15 @@ class Product(SlugMixin, TimeMixin):
     description = models.TextField('Опис',blank=True, null=True)
     price = models.DecimalField('Ціна',max_digits=10, decimal_places=2)
     sale_price = models.DecimalField('Ціна зі знижкою', max_digits=10, decimal_places=2, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, through='ProductTag', blank=True)
     stock = models.PositiveIntegerField('На складі',default=0)
     is_available = models.BooleanField('Доступний',default=True)
     total_price = models.DecimalField('Сума',max_digits=10, decimal_places=2, blank=True, null=True, editable=False)
-    
+    image = models.ImageField(
+        upload_to='products/',  # папка всередині MEDIA_ROOT
+        blank=True,               # поле необов'язкове у формах
+        null=True                 # дозволяє NULL у БД
+    )
     
     class Meta:
         verbose_name = 'Товар'
@@ -71,6 +78,12 @@ class Product(SlugMixin, TimeMixin):
     @property
     def is_on_sale(self):
         return self.sale_price is not None
+    
+    @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return settings.STATIC_URL + 'images/no-photo.jpg'
     
     
     def __str__(self):

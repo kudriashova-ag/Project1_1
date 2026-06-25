@@ -1,0 +1,57 @@
+<!-- store/product_detail.html -->
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="product-detail">
+
+  <!-- Фото та основна інфо -->
+  <div class="product-image">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% endif %}
+  </div>
+
+  <div class="product-info">
+    <h1>{{ product.name }}</h1>
+
+    <!-- Ціна -->
+    {% if product.sale_price %}
+      <p><s>{{ product.price }} ₴</s></p>
+      <p>{{ product.sale_price }} ₴</p>
+    {% else %}
+      <p>{{ product.price }} ₴</p>
+    {% endif %}
+
+    <!-- Наявність -->
+    <p>{% if product.is_available %}В наявності ({{ product.stock }} шт.){% else %}Немає в наявності{% endif %}</p>
+
+    <!-- Опис -->
+    {% if product.description %}
+      <p>{{ product.description }}</p>
+    {% endif %}
+
+    <!-- Атрибути -->
+    {% if attributes %}
+    <table>
+      {% for av in attributes %}
+      <tr>
+        <td><b>{{ av.attribute.name }}</b></td>
+        <td>{{ av.value }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+
+    <!-- Теги -->
+    {% if tags %}
+    <div class="tags">
+      {% for tag in tags %}
+        <a href="?tag={{ tag.slug }}">#{{ tag.name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock %}

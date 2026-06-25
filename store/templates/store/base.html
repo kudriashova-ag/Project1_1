@@ -16,9 +16,26 @@
             <input type="text" name="q" value="{{query}}" placeholder="Введіть назву товару...">
             <button type="submit" class="btn btn-primary">Знайти</button>
         </form>
-        
+
         <nav>
+            {% for category in categories %}
+                <a href="{% url 'store:category' category.slug %}">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
             <a href="{% url "contacts" %}">Контакти</a>
+
+            {% if user.is_authenticated %}
+                <span style="margin-left: 20px; color: #333;">
+                    Привіт, {{ user.username }}!
+                    <a href="{% url 'accounts:logout' %}" style="margin-left: 10px;">Вийти</a>
+                </span>
+            {% else %}
+                <span style="margin-left: 20px;">
+                    <a href="{% url 'accounts:login' %}" style="margin-right: 10px;">Вхід</a>
+                    <a href="{% url 'accounts:register' %}">Реєстрація</a>
+                </span>
+            {% endif %}
         </nav>
     </header>
     

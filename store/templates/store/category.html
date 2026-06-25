@@ -1,0 +1,30 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+{% endblock  %}
+
+{% block title %} {{category.name}} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+
+<h1>{{category.name|upper}}</h1>
+
+<div class="category-page">
+
+    <aside class="filters">
+        <div>Фільтри</div>
+    </aside>
+
+    <div class="product-grid">
+        {% for product in products %}
+        {% include "store/components/product_card.html" %}
+        {% endfor %}
+    </div>
+
+</div>
+
+
+{% endblock %}
